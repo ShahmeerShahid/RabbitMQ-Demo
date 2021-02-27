@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+    rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+            - "15672:15672"
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+
+    mini-automarker:
+        build: ./mini-automarker/
+        environment:
+            RABBITMQ_HOST: "rabbitmq"
+        volumes:
+            - ./mini-automarker:/usr/src/app
+
+    mini-adminapi:
+        build: ./mini-adminapi
+        environment:
+            - RABBITMQ_HOST=rabbitmq
+            - PORT=80
+        volumes:
+            - ./mini-adminapi:/usr/src
+        ports:
+            - 8080:80
